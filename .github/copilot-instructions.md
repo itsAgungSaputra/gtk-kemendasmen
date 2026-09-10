@@ -23,3 +23,4 @@ Detailed project architecture, domain data, and guidelines are thoroughly docume
    - When refactoring `App.jsx` into smaller components (e.g., in `src/components/`), preserve all existing data and props.
    - Keep components responsive across mobile, tablet, and desktop screens.
    - Retain smooth scrolling and accessibility standards.
+

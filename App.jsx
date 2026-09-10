@@ -449,6 +449,10 @@ const SKM_ITEMS = [
 ];
 
 const SITE_ASSETS = {
+  logoSekunder: "./assets/kgtk-logo-sekunder.webp",
+  logoSekunderFallback: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2FKGTK-sekunder.BH69p67S.png&w=1200&h=300&f=webp",
+  logoWeb: "./assets/kgtk-logo-web.png",
+  logoWebFallback: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2FKGTK-Gorontalo-logo-web.BkP7-VHh.png&w=250&h=133&f=png",
   office: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fsiap-ziwbk.CwsYmAll.png&w=720&h=600&f=webp",
   officeAlt: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fbgp-kantor.CCBYO0Dd.png&w=720&h=600&f=webp",
   integrity: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fbanner_1.BtNqOKay.jpeg&w=800&h=356&f=webp",
@@ -552,6 +556,83 @@ export default function App() {
   const [searchQ, setSearchQ] = useState("");
   const [modal, setModal] = useState(null);
 
+  // Hero Search State
+  const [heroQuery, setHeroQuery] = useState("");
+  const [isHeroDropdownOpen, setIsHeroDropdownOpen] = useState(false);
+  const [searchNotice, setSearchNotice] = useState("");
+
+  // Live search across all entities when typing in Hero
+  const liveSearchResults = useMemo(() => {
+    const q = heroQuery.trim().toLowerCase();
+    if (!q) return null;
+
+    const matchedBerita = BERITA.filter(
+      (b) => b.title.toLowerCase().includes(q) || b.excerpt.toLowerCase().includes(q)
+    ).slice(0, 3);
+
+    const matchedPengumuman = PENGUMUMAN.filter(
+      (p) => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q)
+    ).slice(0, 3);
+
+    const matchedLayanan = LAYANAN_CARDS.filter(
+      (l) => l.title.toLowerCase().includes(q) || l.desc.toLowerCase().includes(q)
+    ).slice(0, 3);
+
+    const matchedProgram = PROGRAM_UNGGULAN.filter(
+      (pr) => pr.title.toLowerCase().includes(q) || pr.desc.toLowerCase().includes(q)
+    ).slice(0, 2);
+
+    const totalCount =
+      matchedBerita.length +
+      matchedPengumuman.length +
+      matchedLayanan.length +
+      matchedProgram.length;
+
+    return {
+      berita: matchedBerita,
+      pengumuman: matchedPengumuman,
+      layanan: matchedLayanan,
+      program: matchedProgram,
+      totalCount,
+    };
+  }, [heroQuery]);
+
+  const handleHeroSearch = (e) => {
+    if (e) e.preventDefault();
+    const q = heroQuery.trim();
+    if (!q) return;
+
+    setIsHeroDropdownOpen(false);
+    setSearchQ(q);
+
+    const qLower = q.toLowerCase();
+    const hasBerita = BERITA.some(
+      (b) => b.title.toLowerCase().includes(qLower) || b.excerpt.toLowerCase().includes(qLower)
+    );
+    const hasPengumuman = PENGUMUMAN.some(
+      (p) => p.title.toLowerCase().includes(qLower) || p.excerpt.toLowerCase().includes(qLower)
+    );
+    const hasLayanan = LAYANAN_CARDS.some(
+      (l) => l.title.toLowerCase().includes(qLower) || l.desc.toLowerCase().includes(qLower)
+    );
+
+    if (hasBerita) {
+      setActiveTab("Berita");
+      document.getElementById("berita")?.scrollIntoView({ behavior: "smooth" });
+      setSearchNotice(`Hasil pencarian untuk "${q}" di Berita`);
+    } else if (hasPengumuman) {
+      setActiveTab("Pengumuman");
+      document.getElementById("berita")?.scrollIntoView({ behavior: "smooth" });
+      setSearchNotice(`Hasil pencarian untuk "${q}" di Pengumuman`);
+    } else if (hasLayanan) {
+      document.getElementById("layanan")?.scrollIntoView({ behavior: "smooth" });
+      setSearchNotice(`Hasil pencarian untuk "${q}" di Layanan`);
+    } else {
+      document.getElementById("berita")?.scrollIntoView({ behavior: "smooth" });
+      setSearchNotice(`Pencarian untuk "${q}"`);
+    }
+  };
+
   const allItems = activeTab === "Berita" ? BERITA : PENGUMUMAN;
   const filtered = useMemo(() => {
     if (!searchQ.trim()) return allItems;
@@ -583,14 +664,13 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             {/* Logo */}
-            <a href="https://kgtkgorontalo.kemendikdasmen.go.id/" target="_blank" rel="noreferrer" className="flex items-center gap-3 shrink-0">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-700 to-blue-900 flex items-center justify-center shadow-md shadow-blue-700/20">
-                <ShieldIcon />
-              </div>
-              <div className="leading-tight">
-                <p className="font-extrabold text-blue-800 text-base tracking-tight">KGTK Gorontalo</p>
-                <p className="text-[10px] text-slate-500 leading-none hidden sm:block">Kantor Guru dan Tenaga Kependidikan Provinsi Gorontalo</p>
-              </div>
+            <a href="https://kgtkgorontalo.kemendikdasmen.go.id/" target="_blank" rel="noreferrer" className="flex items-center gap-3 shrink-0 py-1 group">
+              <img
+                src={SITE_ASSETS.logoSekunder}
+                onError={(e) => { e.currentTarget.src = SITE_ASSETS.logoSekunderFallback; }}
+                alt="Logo KGTK Gorontalo - Kemendikdasmen"
+                className="h-10 sm:h-12 w-auto object-contain max-w-[260px] sm:max-w-[340px] transition-transform group-hover:scale-[1.02]"
+              />
             </a>
 
             {/* Desktop Nav */}
@@ -680,21 +760,182 @@ export default function App() {
           </p>
 
           {/* Search */}
-          <div className="mt-10 max-w-lg">
-            <div className="relative group">
+          <div className="mt-10 max-w-lg relative z-30">
+            <form onSubmit={handleHeroSearch} className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-400/30 via-blue-400/20 to-emerald-400/20 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition-opacity" />
-              <div className="relative flex items-center bg-white rounded-xl shadow-2xl">
+              <div className="relative flex items-center bg-white rounded-xl shadow-2xl overflow-hidden focus-within:ring-2 focus-within:ring-amber-400 transition-all">
                 <SearchIcon cls="w-5 h-5 text-slate-400 ml-4 shrink-0" />
                 <input
                   type="text"
+                  value={heroQuery}
+                  onChange={(e) => {
+                    setHeroQuery(e.target.value);
+                    setIsHeroDropdownOpen(true);
+                  }}
+                  onFocus={() => {
+                    if (heroQuery.trim()) setIsHeroDropdownOpen(true);
+                  }}
                   placeholder="Cari berita, program, atau layanan..."
                   className="w-full py-4 px-3 bg-transparent text-slate-700 placeholder:text-slate-400 text-sm focus:outline-none"
                 />
-                <button className="shrink-0 mr-2 px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 text-white text-sm font-semibold transition-colors">
+                {heroQuery && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setHeroQuery("");
+                      setIsHeroDropdownOpen(false);
+                    }}
+                    className="p-1.5 mr-1 text-slate-400 hover:text-slate-600 rounded-lg transition-colors"
+                    title="Hapus pencarian"
+                  >
+                    <XIcon />
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  className="shrink-0 mr-2 px-5 py-2.5 rounded-lg bg-blue-700 hover:bg-blue-800 active:scale-95 text-white text-sm font-semibold transition-all shadow-md flex items-center gap-1.5"
+                >
                   Cari
                 </button>
               </div>
-            </div>
+            </form>
+
+            {/* Live Search Suggestions Dropdown */}
+            {isHeroDropdownOpen && liveSearchResults && (
+              <>
+                <div
+                  className="fixed inset-0 z-40"
+                  onClick={() => setIsHeroDropdownOpen(false)}
+                />
+                <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-slate-200 overflow-hidden text-slate-800 text-left z-50 animate-in max-h-[70vh] flex flex-col">
+                  <div className="p-3 bg-slate-50 border-b border-slate-200 flex items-center justify-between text-xs text-slate-500">
+                    <span>
+                      Hasil untuk: <strong className="text-slate-800">"{heroQuery}"</strong> ({liveSearchResults.totalCount} ditemukan)
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => setIsHeroDropdownOpen(false)}
+                      className="text-slate-400 hover:text-slate-700 font-semibold"
+                    >
+                      Tutup
+                    </button>
+                  </div>
+
+                  <div className="overflow-y-auto p-2 space-y-3">
+                    {liveSearchResults.totalCount === 0 ? (
+                      <div className="p-6 text-center text-slate-400 text-sm">
+                        Tidak ditemukan hasil untuk "{heroQuery}".
+                        <p className="text-xs text-slate-500 mt-1">
+                          Coba kata kunci: <em>magang, bcks, pelatihan, data, narasumber</em>
+                        </p>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Berita & Pengumuman */}
+                        {(liveSearchResults.berita.length > 0 || liveSearchResults.pengumuman.length > 0) && (
+                          <div>
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
+                              Berita &amp; Pengumuman
+                            </p>
+                            <div className="space-y-1">
+                              {[...liveSearchResults.berita, ...liveSearchResults.pengumuman].map((item) => (
+                                <button
+                                  key={`${item.type}-${item.id}`}
+                                  type="button"
+                                  onClick={() => {
+                                    setModal(item);
+                                    setIsHeroDropdownOpen(false);
+                                  }}
+                                  className="w-full text-left p-2.5 rounded-xl hover:bg-blue-50 transition-colors flex items-start gap-2.5 group"
+                                >
+                                  <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ring-1 shrink-0 mt-0.5 ${typeBadge(item.type)}`}>
+                                    {item.type}
+                                  </span>
+                                  <div className="min-w-0 flex-1">
+                                    <p className="text-xs font-bold text-slate-800 group-hover:text-blue-700 line-clamp-1">
+                                      {item.title}
+                                    </p>
+                                    <p className="text-[11px] text-slate-500 line-clamp-1">
+                                      {item.excerpt}
+                                    </p>
+                                  </div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Layanan */}
+                        {liveSearchResults.layanan.length > 0 && (
+                          <div>
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
+                              Layanan KGTK
+                            </p>
+                            <div className="space-y-1">
+                              {liveSearchResults.layanan.map((l) => (
+                                <a
+                                  key={l.title}
+                                  href={l.href}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  onClick={() => setIsHeroDropdownOpen(false)}
+                                  className="block p-2.5 rounded-xl hover:bg-emerald-50 transition-colors group"
+                                >
+                                  <p className="text-xs font-bold text-slate-800 group-hover:text-emerald-700">
+                                    {l.title}
+                                  </p>
+                                  <p className="text-[11px] text-slate-500 line-clamp-1">
+                                    {l.desc}
+                                  </p>
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Program */}
+                        {liveSearchResults.program.length > 0 && (
+                          <div>
+                            <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 px-3 py-1">
+                              Program Unggulan
+                            </p>
+                            <div className="space-y-1">
+                              {liveSearchResults.program.map((pr) => (
+                                <a
+                                  key={pr.title}
+                                  href={pr.href}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  onClick={() => setIsHeroDropdownOpen(false)}
+                                  className="block p-2.5 rounded-xl hover:bg-amber-50 transition-colors group"
+                                >
+                                  <p className="text-xs font-bold text-slate-800 group-hover:text-amber-700">
+                                    {pr.title}
+                                  </p>
+                                  <p className="text-[11px] text-slate-500 line-clamp-1">
+                                    {pr.desc}
+                                  </p>
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+
+                  <div className="p-2.5 bg-slate-50 border-t border-slate-200 text-center">
+                    <button
+                      type="button"
+                      onClick={handleHeroSearch}
+                      className="text-xs font-semibold text-blue-700 hover:text-blue-900 inline-flex items-center gap-1"
+                    >
+                      Buka hasil lengkap di Berita &amp; Pengumuman <ChevronRightIcon cls="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* CTA Quick Links */}
@@ -806,6 +1047,26 @@ export default function App() {
               </div>
             </div>
           </div>
+
+          {/* Active Search Feedback Pill */}
+          {searchQ && (
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-2 bg-blue-50 border border-blue-200 text-blue-800 px-4 py-2.5 rounded-xl text-xs sm:text-sm">
+              <span className="flex items-center gap-2">
+                <SearchIcon cls="w-4 h-4 text-blue-600 shrink-0" />
+                {searchNotice || `Menampilkan hasil untuk: "${searchQ}"`} <strong>({filtered.length} item ditemukan di {activeTab})</strong>
+              </span>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchQ("");
+                  setSearchNotice("");
+                }}
+                className="text-blue-700 hover:text-blue-900 font-bold underline cursor-pointer"
+              >
+                Reset Filter
+              </button>
+            </div>
+          )}
 
           {filtered.length === 0 ? (
             <div className="text-center py-16 text-slate-400">Tidak ada item yang cocok dengan pencarian.</div>
@@ -965,12 +1226,15 @@ export default function App() {
             {/* Brand */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center shadow-md">
-                  <ShieldIcon />
-                </div>
+                <img
+                  src={SITE_ASSETS.logoWeb}
+                  onError={(e) => { e.currentTarget.src = SITE_ASSETS.logoWebFallback; }}
+                  alt="Logo KGTK Gorontalo"
+                  className="h-12 w-auto object-contain brightness-110"
+                />
                 <div>
-                  <p className="font-extrabold text-white text-sm">KGTK Gorontalo</p>
-                  <p className="text-xs text-slate-500">Kemendikdasmen</p>
+                  <p className="font-extrabold text-white text-base leading-tight">KGTK Gorontalo</p>
+                  <p className="text-xs text-slate-400">Kemendikdasmen RI</p>
                 </div>
               </div>
               <p className="text-sm leading-relaxed mb-5">
