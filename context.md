@@ -11,7 +11,7 @@
 - **Instansi Induk**: Kementerian Pendidikan Dasar dan Menengah (Kemendikdasmen RI)
 - **Website Referensi Asli**: [https://kgtkgorontalo.kemendikdasmen.go.id/](https://kgtkgorontalo.kemendikdasmen.go.id/)
 - **Tujuan Sistem**: Menyediakan portal satu pintu (*single point of access*) untuk informasi kedinasan, layanan administrasi GTK, pengumuman seleksi/pelatihan, program unggulan, survei kepuasan masyarakat (SKM), serta kanal pengaduan publik resmi bagi seluruh Pendidik dan Tenaga Kependidikan di Provinsi Gorontalo.
-- **Repository Git**: [https://github.com/itsAgungSaputra/-.git](https://github.com/itsAgungSaputra/-.git)
+- **Repository Git**: [https://github.com/itsAgungSaputra/gtk-kemendasmen.git](https://github.com/itsAgungSaputra/gtk-kemendasmen.git)
 
 ---
 
