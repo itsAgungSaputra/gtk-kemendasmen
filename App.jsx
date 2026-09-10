@@ -448,6 +448,23 @@ const SKM_ITEMS = [
   { label: "Penanganan Pengaduan", value: 9.0 },
 ];
 
+const SITE_ASSETS = {
+  office: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fsiap-ziwbk.CwsYmAll.png&w=720&h=600&f=webp",
+  officeAlt: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fbgp-kantor.CCBYO0Dd.png&w=720&h=600&f=webp",
+  integrity: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fbanner_1.BtNqOKay.jpeg&w=800&h=356&f=webp",
+  gratification: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fbanner_2.BW4tlKmB.jpeg&w=800&h=356&f=webp",
+  rumah: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fdefault_01.BxoCNcDx.jpg&w=500&h=500&f=webp",
+  ruang: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=%2F_astro%2Fdefault_02.7FqmB3p-.png&w=500&h=500&f=webp",
+  survey: "https://kgtkgorontalo.kemendikdasmen.go.id/_image?href=https%3A%2F%2Fcdn.prod.website-files.com%2F64022de562115a8189fe542a%2F6417b403643564c0009f58c1_Structured-Or-Semi-Structured-Questionnaire.jpeg&w=1200&h=700&f=webp",
+};
+
+const TRUST_BANNERS = [
+  { image: SITE_ASSETS.integrity, label: "Zona Integritas", href: "https://s.id/ZIWBK-BGPGorontalo" },
+  { image: SITE_ASSETS.gratification, label: "Tolak Gratifikasi", href: "https://s.id/ZIWBK-BGPGorontalo" },
+];
+
+const NEWS_IMAGES = [SITE_ASSETS.officeAlt, SITE_ASSETS.ruang, SITE_ASSETS.office, SITE_ASSETS.rumah];
+
 /* ═══════════════════════════ HELPER ═══════════════════════════ */
 
 const typeBadge = (type) => {
@@ -494,11 +511,13 @@ function DropdownNav({ item }) {
 }
 
 function CardBerita({ item, onClick }) {
+  const image = NEWS_IMAGES[(item.id - 1) % NEWS_IMAGES.length];
   return (
     <article
       onClick={() => onClick(item)}
       className="bg-white rounded-2xl border border-slate-100 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer overflow-hidden flex flex-col"
     >
+      <img src={image} alt="" className="w-full aspect-[16/9] object-cover" />
       {/* Color accent top */}
       <div className={`h-1 ${item.type === "Kegiatan" ? "bg-blue-600" : item.type === "Siaran Pers" ? "bg-emerald-500" : "bg-amber-500"}`} />
       <div className="p-5 flex flex-col flex-1">
@@ -634,7 +653,7 @@ export default function App() {
       </nav>
 
       {/* ── HERO ── */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 text-white">
+      <section className="relative overflow-hidden bg-[#063b73] text-white">
         {/* Blobs */}
         <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-blue-500/15 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-emerald-400/10 rounded-full blur-3xl" />
@@ -642,25 +661,26 @@ export default function App() {
         <div className="absolute inset-0 opacity-[0.04]"
           style={{ backgroundImage: "linear-gradient(rgba(255,255,255,.4) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.4) 1px, transparent 1px)", backgroundSize: "50px 50px" }} />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-36 text-center">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24 grid lg:grid-cols-[1.05fr_.95fr] gap-12 items-center">
+          <div>
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-blue-100 text-xs font-medium ring-1 ring-white/20 mb-6 backdrop-blur-sm">
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
             Laman Resmi Kantor GTK Provinsi Gorontalo — Kemendikdasmen
           </div>
 
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold leading-tight tracking-tight max-w-4xl mx-auto">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-[3.5rem] font-extrabold leading-tight tracking-tight max-w-4xl">
             Selamat Datang di{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-yellow-200">
               KGTK Gorontalo
             </span>
           </h1>
-          <p className="mt-4 text-base sm:text-lg text-blue-100/80 max-w-2xl mx-auto leading-relaxed">
+          <p className="mt-4 text-base sm:text-lg text-blue-100/80 max-w-2xl leading-relaxed">
             Kantor Guru dan Tenaga Kependidikan Provinsi Gorontalo — Kementerian Pendidikan Dasar dan Menengah.
             Menjadi Kantor yang <strong className="text-white">Unggul Dalam Inovasi</strong> dan <strong className="text-white">Prima Dalam Pelayanan</strong>.
           </p>
 
           {/* Search */}
-          <div className="mt-10 max-w-lg mx-auto">
+          <div className="mt-10 max-w-lg">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-amber-400/30 via-blue-400/20 to-emerald-400/20 rounded-2xl blur-lg opacity-60 group-hover:opacity-100 transition-opacity" />
               <div className="relative flex items-center bg-white rounded-xl shadow-2xl">
@@ -678,7 +698,7 @@ export default function App() {
           </div>
 
           {/* CTA Quick Links */}
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
+          <div className="mt-8 flex flex-wrap gap-3">
             <a href="https://ppid.gtkgo.id/layanan/maklumat-pelayanan?ref=kgtkgorontalo" target="_blank" rel="noreferrer"
               className="px-5 py-2.5 rounded-xl bg-white text-blue-800 text-sm font-semibold hover:bg-blue-50 transition-colors shadow-lg">
               Maklumat Pelayanan
@@ -692,6 +712,29 @@ export default function App() {
               Permohonan Data PTK
             </a>
           </div>
+          </div>
+
+          <div className="relative hidden lg:block">
+            <div className="absolute -inset-3 rounded-[2rem] border border-white/20 rotate-3" />
+            <figure className="relative overflow-hidden rounded-[1.75rem] bg-white/10 shadow-2xl ring-1 ring-white/20">
+              <img src={SITE_ASSETS.office} alt="Kantor KGTK Gorontalo" className="aspect-[6/5] w-full object-cover" />
+              <figcaption className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/80 to-transparent px-6 pb-5 pt-16 text-sm font-semibold">
+                Kantor Guru dan Tenaga Kependidikan Provinsi Gorontalo
+              </figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      {/* ── TRUST BANNERS ── */}
+      <section className="bg-white py-7 sm:py-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid sm:grid-cols-2 gap-5">
+          {TRUST_BANNERS.map((banner) => (
+            <a key={banner.label} href={banner.href} target="_blank" rel="noreferrer" className="group relative overflow-hidden rounded-2xl bg-slate-100 shadow-sm ring-1 ring-slate-200">
+              <img src={banner.image} alt={banner.label} className="w-full aspect-[2.25/1] object-cover transition-transform duration-500 group-hover:scale-105" />
+              <span className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-slate-950/70 to-transparent px-5 pb-4 pt-10 text-sm font-bold text-white">{banner.label}</span>
+            </a>
+          ))}
         </div>
       </section>
 
@@ -808,10 +851,10 @@ export default function App() {
               key={i}
               href={p.href}
               target="_blank" rel="noreferrer"
-              className={`group relative rounded-2xl overflow-hidden text-white p-7 flex flex-col min-h-[200px] hover:scale-[1.02] transition-all duration-300 ${p.color} shadow-lg`}
+              className={`group relative rounded-2xl overflow-hidden text-white p-7 flex flex-col min-h-[240px] hover:scale-[1.02] transition-all duration-300 ${p.color} shadow-lg`}
             >
-              {/* Subtle inner glow */}
-              <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <img src={NEWS_IMAGES[i % NEWS_IMAGES.length]} alt="" className="absolute inset-0 w-full h-full object-cover opacity-35 mix-blend-screen transition-transform duration-500 group-hover:scale-110" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/45 to-transparent" />
               <span className="relative inline-block text-xs font-semibold bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 mb-4 w-fit">
                 {p.label}
               </span>
@@ -828,7 +871,11 @@ export default function App() {
       {/* ── SKM SECTION ── */}
       <section id="skm" className="bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
-          <div className="text-center mb-12">
+          <div className="grid lg:grid-cols-[.9fr_1.1fr] gap-10 items-center mb-12">
+            <div className="overflow-hidden rounded-2xl ring-1 ring-white/15 shadow-2xl">
+              <img src={SITE_ASSETS.survey} alt="Ilustrasi survei kepuasan masyarakat" className="w-full aspect-[16/10] object-cover" />
+            </div>
+            <div className="text-center lg:text-left">
             <p className="text-xs font-bold text-amber-300 uppercase tracking-widest mb-2">Akuntabilitas Publik</p>
             <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Hasil Survei Kepuasan Masyarakat</h2>
             <p className="mt-3 text-blue-200 text-sm max-w-xl mx-auto">
@@ -837,6 +884,7 @@ export default function App() {
             </p>
             <div className="mt-4 flex items-center justify-center gap-2 text-amber-300">
               {[1,2,3,4,5].map((s) => <StarIcon key={s} />).slice(0, 5)}
+            </div>
             </div>
           </div>
 
