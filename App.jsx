@@ -1335,6 +1335,7 @@ export default function App() {
           {/* Bottom Bar */}
           <div className="mt-12 pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs">
             <p className="text-slate-500">© 2026 Tim Publikasi KGTK Gorontalo — Kementerian Pendidikan Dasar dan Menengah</p>
+            <p className="text-slate-500">Dibuat oleh Mohamad Agung Saputra</p>
             <div className="flex items-center gap-4">
               <a href="https://ppid.gtkgo.id?utm=kgtkgorontalo" target="_blank" rel="noreferrer" className="hover:text-slate-300 transition-colors">PPID</a>
               <a href="https://ppid.gtkgo.id/layanan/standar?utm=kgtkgorontalo" target="_blank" rel="noreferrer" className="hover:text-slate-300 transition-colors">Standar Pelayanan</a>
